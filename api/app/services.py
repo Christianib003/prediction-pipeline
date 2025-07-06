@@ -1,0 +1,1 @@
+# Functions that handle the business logic (querying the DB)
