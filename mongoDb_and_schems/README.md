@@ -10,7 +10,7 @@ This repository contains an ML pipeline for plant disease prediction with a Mong
 #### 1. Plants Collection
 Stores information about plant species.
 
-**Schema Definition:** [plants.json](./mongoDb_and_schemas/schema-plant_disease_dataset-plants-standardJSON.json)
+**Schema Definition:** [plants.json](./schema-plant_disease_dataset-plants-standardJSON.json)
 
 ```json
 {
@@ -30,7 +30,7 @@ Stores information about plant species.
 #### 2. Diseases Collection
 Stores information about plant diseases.
 
-**Schema Definition:** [diseases.json](./mongoDb_and_schemas/schema-plant_disease_dataset-diseases-standardJSON.json)
+**Schema Definition:** [diseases.json](./schema-plant_disease_dataset-diseases-standardJSON.json)
 
 ```json
 {
@@ -50,7 +50,7 @@ Stores information about plant diseases.
 #### 3. Images Collection
 Stores image metadata and relationships.
 
-**Schema Definition:** [images.json](./mongoDb_and_schemas/schema-plant_disease_dataset-images-standardJSON.json)
+**Schema Definition:** [images.json](./schema-plant_disease_dataset-images-standardJSON.json)
 
 ```json
 {
@@ -92,7 +92,7 @@ All collections enforce strict validation through JSON Schema definitions:
 3. `Images.path`: Unique index
 
 ## Schema Files
-- [Plants Collection Schema](./mongoDb_and_schemas/schema-plant_disease_dataset-plants-standardJSON.json)
-- [Diseases Collection Schema](./mongoDb_and_schemas/schema-plant_disease_dataset-diseases-standardJSON.json)
-- [Images Collection Schema](./mongoDb_and_schemas/schema-plant_disease_dataset-images-standardJSON.json)
+- [Plants Collection Schema](./schema-plant_disease_dataset-plants-standardJSON.json)
+- [Diseases Collection Schema](./schema-plant_disease_dataset-diseases-standardJSON.json)
+- [Images Collection Schema](./schema-plant_disease_dataset-images-standardJSON.json)
 ```
