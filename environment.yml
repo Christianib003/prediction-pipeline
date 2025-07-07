@@ -36,4 +36,5 @@ dependencies:
   - pip:
       - dnspython==2.7.0
       - pymongo==4.13.2
+      - python-dotenv==1.1.1
 prefix: /home/lscblack/anaconda3/envs/plant_disease_mongo

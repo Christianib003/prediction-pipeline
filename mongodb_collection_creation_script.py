@@ -4,15 +4,19 @@ import os
 from pymongo import MongoClient
 from datetime import datetime
 from pprint import pprint
+from dotenv import load_dotenv
 
 
-# ATLAS_CONNECTION_STRING = "mongodb+srv://<username>:<password>@cluster0.mongodb.net/plant_disease_dataset?retryWrites=true&w=majority"
-ATLAS_CONNECTION_STRING = ATLAS_CONNECTION_STRING = "mongodb+srv://lchristian:o6wrlRSowzEDEJky@cluster0.cqxlda3.mongodb.net/plant_disease_dataset?retryWrites=true&w=majority&appName=Cluster0"
-DATABASE_NAME = "plant_disease_dataset"
+# Load environment variables
+load_dotenv()
+
+# Configuration from environment variables
+ATLAS_CONNECTION_STRING = os.getenv("MONGO_URI")
+DATABASE_NAME = os.getenv("DATABASE_NAME")
 
 # Dataset configuration
-DATASET_DIR = "data/PlantVillage"
-MAX_IMAGES_PER_CATEGORY = 10000  # 
+DATASET_DIR = os.getenv("DATASET_DIR")
+MAX_IMAGES_PER_CATEGORY = int(os.getenv("MAX_IMAGES_PER_CATEGORY", 10000))
 
 """
 MongoDB Schema Documentation:
