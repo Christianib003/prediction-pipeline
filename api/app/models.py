@@ -20,4 +20,11 @@ class ImageOut(ImageBase):
     disease_name: str
 
     class Config:
-        from_attributes = True # Formerly orm_mode = True
+        from_attributes = True
+
+# Model for updating an image record (input, all fields optional)
+class ImageUpdate(BaseModel):
+    filename: Optional[str] = None
+    storage_path: Optional[str] = None
+    plant_id: Optional[int] = None
+    disease_id: Optional[int] = None
