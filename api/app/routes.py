@@ -28,7 +28,27 @@ def read_latest_image(db: sqlite3.Connection = Depends(get_db)):
 
 @router.get("/images/{image_id}", response_model=models.ImageOut)
 def read_image(image_id: int, db: sqlite3.Connection = Depends(get_db)):
-    pass
+    """
+    Retrieve a single image's metadata by its ID.
+    """
+    cursor = db.cursor()
+    query = """
+        SELECT
+            im.image_id, im.filename, im.image_path, im.date_added,
+            p.plant_name,
+            d.disease_name
+        FROM ImageMetadata im
+        JOIN Plants p ON im.plant_id = p.plant_id
+        JOIN Diseases d ON im.disease_id = d.disease_id
+        WHERE im.image_id = ?
+    """
+    cursor.execute(query, (image_id,))
+    image = cursor.fetchone()
+
+    if image is None:
+        raise HTTPException(status_code=404, detail="Image not found")
+    
+    return dict(image)
 
 @router.put("/images/{image_id}", response_model=models.ImageOut)
 def update_image(image_id: int, image: models.ImageUpdate, db: sqlite3.Connection = Depends(get_db)):

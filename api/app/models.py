@@ -5,7 +5,7 @@ from datetime import datetime
 # Shared base model for common fields
 class ImageBase(BaseModel):
     filename: str
-    storage_path: str
+    image_path: str
 
 # Model for creating a new image record (input)
 class ImageCreate(ImageBase):
@@ -25,6 +25,6 @@ class ImageOut(ImageBase):
 # Model for updating an image record (input, all fields optional)
 class ImageUpdate(BaseModel):
     filename: Optional[str] = None
-    storage_path: Optional[str] = None
+    image_path: Optional[str] = None
     plant_id: Optional[int] = None
     disease_id: Optional[int] = None
