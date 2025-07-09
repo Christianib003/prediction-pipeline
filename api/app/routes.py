@@ -24,7 +24,28 @@ def read_images(skip: int = 0, limit: int = 10, db: sqlite3.Connection = Depends
 
 @router.get("/images/latest", response_model=models.ImageOut)
 def read_latest_image(db: sqlite3.Connection = Depends(get_db)):
-    pass
+    """
+    Retrieve the most recently added image's metadata.
+    """
+    cursor = db.cursor()
+    query = """
+        SELECT
+            im.image_id, im.filename, im.image_path, im.date_added,
+            p.plant_name,
+            d.disease_name
+        FROM ImageMetadata im
+        JOIN Plants p ON im.plant_id = p.plant_id
+        JOIN Diseases d ON im.disease_id = d.disease_id
+        ORDER BY im.date_added DESC
+        LIMIT 1
+    """
+    cursor.execute(query)
+    image = cursor.fetchone()
+
+    if image is None:
+        raise HTTPException(status_code=404, detail="No images found in the database")
+        
+    return dict(image)
 
 @router.get("/images/{image_id}", response_model=models.ImageOut)
 def read_image(image_id: int, db: sqlite3.Connection = Depends(get_db)):
