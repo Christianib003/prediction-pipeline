@@ -18,6 +18,7 @@ def get_db():
 def create_image(image: models.ImageCreate, db: sqlite3.Connection = Depends(get_db)):
     pass
 
+
 @router.get("/images/", response_model=List[models.ImageOut])
 def read_images(skip: int = 0, limit: int = 10, db: sqlite3.Connection = Depends(get_db)):
     """
@@ -39,6 +40,7 @@ def read_images(skip: int = 0, limit: int = 10, db: sqlite3.Connection = Depends
     images = cursor.fetchall()
     # Convert each row in the list to a dictionary
     return [dict(row) for row in images]
+
 
 @router.get("/images/latest", response_model=models.ImageOut)
 def read_latest_image(db: sqlite3.Connection = Depends(get_db)):
@@ -65,6 +67,7 @@ def read_latest_image(db: sqlite3.Connection = Depends(get_db)):
         
     return dict(image)
 
+
 @router.get("/images/{image_id}", response_model=models.ImageOut)
 def read_image(image_id: int, db: sqlite3.Connection = Depends(get_db)):
     """
@@ -89,9 +92,11 @@ def read_image(image_id: int, db: sqlite3.Connection = Depends(get_db)):
     
     return dict(image)
 
+
 @router.put("/images/{image_id}", response_model=models.ImageOut)
 def update_image(image_id: int, image: models.ImageUpdate, db: sqlite3.Connection = Depends(get_db)):
     pass
+
 
 @router.delete("/images/{image_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_image(image_id: int, db: sqlite3.Connection = Depends(get_db)):
