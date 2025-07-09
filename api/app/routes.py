@@ -20,7 +20,25 @@ def create_image(image: models.ImageCreate, db: sqlite3.Connection = Depends(get
 
 @router.get("/images/", response_model=List[models.ImageOut])
 def read_images(skip: int = 0, limit: int = 10, db: sqlite3.Connection = Depends(get_db)):
-    pass
+    """
+    Retrieve a list of images with their metadata.
+    """
+    cursor = db.cursor()
+    query = """
+        SELECT
+            im.image_id, im.filename, im.image_path, im.date_added,
+            p.plant_name,
+            d.disease_name
+        FROM ImageMetadata im
+        JOIN Plants p ON im.plant_id = p.plant_id
+        JOIN Diseases d ON im.disease_id = d.disease_id
+        ORDER BY im.image_id
+        LIMIT ? OFFSET ?
+    """
+    cursor.execute(query, (limit, skip))
+    images = cursor.fetchall()
+    # Convert each row in the list to a dictionary
+    return [dict(row) for row in images]
 
 @router.get("/images/latest", response_model=models.ImageOut)
 def read_latest_image(db: sqlite3.Connection = Depends(get_db)):
