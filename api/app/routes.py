@@ -1,1 +1,0 @@
-# Defines the API endpoints (/images/latest, etc.)
