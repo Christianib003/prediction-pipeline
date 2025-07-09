@@ -1,17 +1,21 @@
 import sqlite3
 import os
+from dotenv import load_dotenv
 
-# Define the path to the database file
-DATABASE_PATH = os.path.join(os.path.dirname(__file__), '..', '..', 'database', 'plant_disease_dataset.db')
+# Load environment variables from the .env file
+load_dotenv()
+
+# Get the database path from the environment variable
+DATABASE_PATH = os.getenv("DATABASE_PATH")
 
 def get_db_connection():
     """
-    Establishes a connection to the SQLite database.
-
-    Returns:
-        sqlite3.Connection: A connection object to the database.
+    Establishes a connection to the SQLite database
+    using the path from environment variables.
     """
+    if not DATABASE_PATH:
+        raise ValueError("DATABASE_PATH not set in environment variables")
+        
     conn = sqlite3.connect(DATABASE_PATH)
-    # This allows you to access columns by name (like a dictionary)
     conn.row_factory = sqlite3.Row
     return conn
