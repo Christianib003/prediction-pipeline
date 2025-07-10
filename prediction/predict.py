@@ -6,7 +6,7 @@ from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
 
 API_ENDPOINT = "http://localhost:5000/images/latest" 
-MODEL_PATH = "models/plant_disease_model.keras"        
+MODEL_PATH = "models/plant_diseases.keras"        
 
 response = requests.get(API_ENDPOINT)
 
