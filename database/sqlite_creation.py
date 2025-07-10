@@ -39,6 +39,18 @@ CREATE TABLE IF NOT EXISTS ImageMetadata (
 ''')
 
 print(f"Database '{DB_PATH}' created successfully with required tables.")
+# Create the trigger (place after table creation)
+cursor.execute('''
+CREATE TRIGGER IF NOT EXISTS set_date_added_after_insert
+AFTER INSERT ON ImageMetadata
+FOR EACH ROW
+BEGIN
+    UPDATE ImageMetadata
+    SET date_added = STRFTIME('%Y-%m-%d %H:%M:%S', 'now')
+    WHERE image_id = NEW.image_id;
+END;
+''')
+print("Database trigger created successfully.")
 
 # --- Insert Data Section ---
 
