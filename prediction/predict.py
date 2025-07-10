@@ -5,8 +5,9 @@ import numpy as np
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
 
-API_ENDPOINT = "http://localhost:5000/images/latest" 
-MODEL_PATH = "models/plant_diseases.keras"        
+API_ENDPOINT = "http://127.0.0.1:8000/images/latest" 
+MODEL_PATH = "prediction/model/plant_deseases.keras"
+
 
 response = requests.get(API_ENDPOINT)
 
@@ -23,43 +24,50 @@ if not img_path or not os.path.exists(img_path):
 
 print(f"Image path received: {img_path}")
 
-# === 2. Load pre-trained Keras model ===
 try:
     model = load_model(MODEL_PATH)
     print("Model loaded successfully.")
+
 except Exception as e:
     print("Failed to load model:", e)
     exit()
-
-# === 3. Load and preprocess the image ===
 try:
-    img = image.load_img(img_path, target_size=(240, 240))  # Resize for model input
-    img_array = image.img_to_array(img)
-    img_array = img_array / 255.0  # Normalize
-    img_array = np.expand_dims(img_array, axis=0)  # Add batch dimension
+    img = image.load_img(img_path, target_size=(128, 128), color_mode='rgb') 
+    img_array = image.img_to_array(img)       
+    img_array = img_array / 255.0
+    img_array = np.expand_dims(img_array, axis=0) 
+
 except Exception as e:
     print("Failed to load or preprocess image:", e)
+    print("Model expects input shape:", model.input_shape)
+
+    print("Input you're sending:", img_array.shape)
+
     exit()
 
-# === 4. Make prediction ===
+
 prediction = model.predict(img_array)
 
 # === 5. Interpret prediction ===
-if prediction.shape[1] == 1:  # Binary classification
-    label = "unhealthy" if prediction[0][0] > 0.5 else "healthy"
-    confidence = prediction[0][0]
-else:  # Multiclass prediction
-    class_labels = [
-        'Corn_(maize)__Common_rust',
-        'Corn_(maize)__healthy',
-        'Potato__Early_blight',
-        'Potato__healthy',
-        'Tomato__Bacterial_spot',
-        'Tomato__healthy'
-    ]
+CLASS_NAMES = [
+    'Corn_(maize)__Common_rust',
+    'Corn_(maize)__healthy',
+    'Potato__Early_blight',
+    'Potato__healthy',
+    'Tomato__Bacterial_spot',
+    'Tomato__healthy'
+]
 
-    predicted_index = np.argmax(prediction)
-    label = class_labels[predicted_index]
-    confidence = prediction[0][predicted_index]
+# predicted_index = np.argmax(prediction)
+# label = class_labels[predicted_index]
+# confidence = prediction[0][predicted_index]
 
-print(f"Prediction: {label} (Confidence: {confidence:.2f})")
+# print(f"Prediction: {label} (Confidence: {confidence:.2f})")
+
+predicted_index = np.argmax(prediction[0])
+label = CLASS_NAMES[predicted_index]
+confidence = prediction[0][predicted_index]
+
+print("\n- Prediction Results -")
+print(f"Predicted Class: {label}")
+print(f"Confidence: {confidence:.2f}")

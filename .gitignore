@@ -1,2 +1,9 @@
-data/PlantVillage/
 project_structure
+
+# Ignore environment files
+.env
+.venv
+
+# Ignore Cache files
+/api/__pycache__
+/api/app/__pycache__
