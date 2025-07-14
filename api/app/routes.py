@@ -106,3 +106,32 @@ def delete_image(image_id: int, db: psycopg2.extensions.connection = Depends(get
     db.commit()
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
+
+# Router for MongoDB Logging Operations
+log_router = APIRouter(
+    prefix="/predictions",
+    tags=["MongoDB Prediction Logging"]
+)
+
+@log_router.post("/", status_code=status.HTTP_201_CREATED)
+def log_prediction(log_data: models.PredictionLogCreate, db: Database = Depends(get_mongo_db)):
+    """Logs prediction results into MongoDB."""
+    images_collection = db.images
+    # Find the document using the ID from the SQL database
+    image_document = images_collection.find_one({"sql_image_id": log_data.sql_image_id})
+
+    if not image_document:
+        raise HTTPException(status_code=404, detail="Image not found in MongoDB to log prediction against.")
+
+    prediction_entry = {
+        "predicted_class_name": log_data.predicted_class_name,
+        "confidence_score": log_data.confidence_score,
+        "prediction_date": datetime.now()
+    }
+    
+    images_collection.update_one(
+        {"_id": image_document["_id"]},
+        {"$push": {"predictions": prediction_entry}}
+    )
+
+    return {"message": "Prediction logged successfully"}
