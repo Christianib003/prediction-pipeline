@@ -14,7 +14,7 @@ router = APIRouter(
 )
 
 
-@router.get("/images/{image_id}", response_model=models.ImageOut)
+@router.get("/{image_id}", response_model=models.ImageOut)
 def get_image_by_id(image_id: int, db: psycopg2.extensions.connection = Depends(get_postgres_db)):
     """Retrieve a single image's metadata by its ID."""
     cursor = db.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
@@ -33,7 +33,7 @@ def get_image_by_id(image_id: int, db: psycopg2.extensions.connection = Depends(
         raise HTTPException(status_code=404, detail="Image not found")
     return record
 
-@router.get("/images/latest/", response_model=models.ImageOut)
+@router.get("/latest/", response_model=models.ImageOut)
 def read_latest_image(db: psycopg2.extensions.connection = Depends(get_postgres_db)):
     """Retrieve the most recently added image's metadata."""
     cursor = db.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
@@ -44,7 +44,7 @@ def read_latest_image(db: psycopg2.extensions.connection = Depends(get_postgres_
         raise HTTPException(status_code=404, detail="No images found")
     return record
 
-@router.get("/images", response_model=List[models.ImageOut])
+@router.get("/", response_model=List[models.ImageOut])
 def get_all_images(skip: int = 0, limit: int = 10, db: psycopg2.extensions.connection = Depends(get_postgres_db)):
     """Retrieve a list of all images with pagination."""
     cursor = db.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
@@ -53,8 +53,6 @@ def get_all_images(skip: int = 0, limit: int = 10, db: psycopg2.extensions.conne
     records = cursor.fetchall()
     return records
 
-
-# POST (Create) Endpoint
 
 @router.post("/", response_model=models.ImageOut, status_code=status.HTTP_201_CREATED)
 def create_image(image: models.ImageCreate, db: psycopg2.extensions.connection = Depends(get_postgres_db)):
@@ -75,10 +73,8 @@ def create_image(image: models.ImageCreate, db: psycopg2.extensions.connection =
 @router.put("images/{image_id}", response_model=models.ImageOut)
 def update_image(image_id: int, image_update: models.ImageUpdate, db: psycopg2.extensions.connection = Depends(get_postgres_db)):
     """Update an existing image metadata record."""
-    # First, check if the image exists
     get_image_by_id(image_id, db)
     
-    # Dynamically build the UPDATE query based on provided fields
     update_data = image_update.model_dump(exclude_unset=True)
     if not update_data:
         raise HTTPException(status_code=400, detail="No update data provided")
@@ -97,7 +93,7 @@ def update_image(image_id: int, image_update: models.ImageUpdate, db: psycopg2.e
 
 
 
-@router.delete("/images/{image_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/{image_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_image(image_id: int, db: psycopg2.extensions.connection = Depends(get_postgres_db)):
     """Delete an image metadata record."""
     get_image_by_id(image_id, db)
