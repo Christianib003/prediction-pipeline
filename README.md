@@ -2,9 +2,9 @@
 
 This project implements a full-stack, end-to-end data pipeline designed for the automated classification of plant diseases from leaf images. It showcases a modern, robust architecture featuring a dual-database system (PostgreSQL and MongoDB), a high-performance FastAPI backend that serves a RESTful API, and a sophisticated client script that leverages a trained TensorFlow model to perform real-time predictions. The primary goal is to provide a scalable and maintainable solution for managing image metadata, executing machine learning models, and logging historical prediction data in a seamless, automated workflow.
 
-**Live API URL:** `[Link to your hosted API on Render/Heroku]`
+- [Live API Link](https://prediction-pipeline.onrender.com)
 
-**GitHub Repository:** `[Link to your GitHub repository]`
+- [API Documentation](https://prediction-pipeline.onrender.com/docs)
 
 ---
 

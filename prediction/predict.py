@@ -5,10 +5,12 @@ import tensorflow as tf
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
 from datetime import datetime
+from dotenv import load_dotenv
 
-# --- Configuration ---
-API_BASE_URL = "http://127.0.0.1:8000"
-# Use a simple relative path, assuming the script is run from the project root
+
+load_dotenv()
+
+API_BASE_URL = os.getenv("API_URL", "http://127.0.0.1:8000")
 MODEL_PATH = "models/optimized_cnn_model_4.keras"
 IMAGE_SIZE = (128, 128)
 CLASS_NAMES = [
