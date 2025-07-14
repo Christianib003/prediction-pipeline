@@ -7,7 +7,9 @@ app = FastAPI(
     version="1.0.0"
 )
 
+# Include both routers in your main app
 app.include_router(routes.router)
+app.include_router(routes.log_router)
 
 @app.get("/")
 def read_root():
