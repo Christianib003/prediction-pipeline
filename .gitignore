@@ -7,3 +7,6 @@ project_structure
 # Ignore Cache files
 /api/__pycache__
 /api/app/__pycache__
+
+# Ignore Python version files
+.python-version

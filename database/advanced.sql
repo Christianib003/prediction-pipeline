@@ -1,1 +1,0 @@
--- The Stored Procedure and Trigger definitions
