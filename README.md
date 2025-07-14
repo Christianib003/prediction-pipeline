@@ -84,8 +84,8 @@ Follow these detailed instructions to set up and run the project on your local m
 Open your terminal and clone the project from GitHub.
 
     ```bash
-    git clone [your-repository-url]
-    cd [your-repository-name]
+    git clone https://github.com/Christianib003/prediction-pipeline
+    cd prediction-pipeline
     ```
 
 2. **Set Up the Python Environment**
