@@ -1,0 +1,13 @@
+{
+    "sql_image_id": 1,
+    "filename": "image_001.jpg",
+    "image_path": "data/PlantVillage/test/Tomato___Bacterial_spot/image_001.jpg",
+    "plant": {
+      "name": "Tomato"
+    },
+    "disease": {
+      "name": "Bacterial spot"
+    },
+    "date_added": "2025-07-14T12:00:00Z",
+    "predictions": []
+  }
