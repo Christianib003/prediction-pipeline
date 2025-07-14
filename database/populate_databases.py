@@ -4,7 +4,7 @@ from pymongo import MongoClient
 from dotenv import load_dotenv
 from datetime import datetime
 
-# --- Configuration ---
+# Configuration
 load_dotenv()
 POSTGRES_URL = os.getenv("DATABASE_URL")
 MONGO_URL = os.getenv("MONGO_URL")
@@ -18,7 +18,7 @@ def populate_databases():
     mongo_client = None
     
     try:
-        # --- Connect to both databases ---
+        # Connect to both databases
         print("Connecting to PostgreSQL...")
         pg_conn = psycopg2.connect(POSTGRES_URL)
         pg_cursor = pg_conn.cursor()
@@ -28,7 +28,7 @@ def populate_databases():
         images_collection = mongo_db.images
         print("Connections successful.")
 
-        # --- Process dataset and populate ---
+        # Process dataset and populate ---
         if not os.path.exists(DATASET_DIR):
             print(f"Error: Dataset directory not found at '{DATASET_DIR}'")
             return
@@ -46,28 +46,28 @@ def populate_databases():
 
             print(f"\nProcessing folder: {folder_name}")
             
+            # Limit the number of images per category to 10
+            image_count = 0
             for filename in os.listdir(folder_path):
+                if image_count >= 10:
+                    print("  - Reached limit of 10 images for this category.")
+                    break
+
                 if filename.lower().endswith(('.jpg', '.jpeg', '.png')):
                     image_path = os.path.join(folder_path, filename).replace("\\", "/")
 
-                    # --- CORRECT LOGIC ---
-                    # 1. Use cursor.callproc() to execute the procedure
                     pg_cursor.execute("CALL add_new_image(%s, %s, %s, %s)", (filename, image_path, plant_name, disease_name))
-                    
-                    # 2. Commit the transaction to save the new row
                     pg_conn.commit()
                     
-                    # 3. Use a separate SELECT query to get the ID of the new row
                     pg_cursor.execute("SELECT image_id, date_added FROM image_metadata WHERE image_path = %s", (image_path,))
                     sql_result = pg_cursor.fetchone()
                     
                     if not sql_result:
-                        print(f"  - Could not retrieve ID from PostgreSQL for '{filename}'. Skipping Mongo insert.")
+                        print(f"  - Could not retrieve ID for '{filename}'.")
                         continue
                     
                     sql_image_id, date_added = sql_result
                     
-                    # Construct and insert the MongoDB document
                     mongo_doc = {
                         "sql_image_id": sql_image_id,
                         "filename": filename,
@@ -78,7 +78,9 @@ def populate_databases():
                         "predictions": []
                     }
                     images_collection.insert_one(mongo_doc)
-                    print(f"  - Populated '{filename}' in both databases (SQL ID: {sql_image_id}).")
+                    print(f"  - Populated '{filename}' (SQL ID: {sql_image_id}).")
+                    
+                    image_count += 1
         
         print("\nDatabase population complete.")
 
@@ -87,7 +89,6 @@ def populate_databases():
         if pg_conn:
             pg_conn.rollback()
     finally:
-        # --- Close connections ---
         if pg_conn:
             pg_conn.close()
             print("PostgreSQL connection closed.")

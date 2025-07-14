@@ -4,3 +4,7 @@ psycopg2-binary
 pymongo[srv]
 python-dotenv
 sqlalchemy
+numpy
+tensorflow
+requests
+Pillow
